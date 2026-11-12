@@ -17,6 +17,7 @@ public class EventsController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(List<EventResponse>), StatusCodes.Status200OK)]
     public ActionResult<List<EventResponse>> GetAll()
     {
         var events = _eventService.GetAll()
@@ -27,6 +28,8 @@ public class EventsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(EventResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public ActionResult<EventResponse> GetById(Guid id)
     {
         var existingEvent = _eventService.GetById(id);
@@ -40,6 +43,8 @@ public class EventsController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(EventResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public ActionResult<EventResponse> Create(EventRequest request)
     {
         var createdEvent = _eventService.Create(ToModel(request));
@@ -51,6 +56,9 @@ public class EventsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public IActionResult Update(Guid id, EventRequest request)
     {
         var updated = _eventService.Update(id, ToModel(request));
@@ -64,6 +72,8 @@ public class EventsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public IActionResult Delete(Guid id)
     {
         var deleted = _eventService.Delete(id);

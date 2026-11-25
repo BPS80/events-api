@@ -16,10 +16,26 @@ public class EventRequest : IValidatableObject
     public DateTime? EndAt { get; set; }
 
     public IEnumerable<ValidationResult> Validate(
-        ValidationContext validationContext)
+       ValidationContext validationContext)
     {
+        if (StartAt.HasValue && StartAt.Value == default(DateTime))
+        {
+            yield return new ValidationResult(
+                "Дата начала не может быть значением по умолчанию.",
+                new[] { nameof(StartAt) });
+        }
+
+        if (EndAt.HasValue && EndAt.Value == default(DateTime))
+        {
+            yield return new ValidationResult(
+                "Дата окончания не может быть значением по умолчанию.",
+                new[] { nameof(EndAt) });
+        }
+
         if (StartAt.HasValue &&
             EndAt.HasValue &&
+            StartAt.Value != default(DateTime) &&
+            EndAt.Value != default(DateTime) &&
             EndAt.Value <= StartAt.Value)
         {
             yield return new ValidationResult(
